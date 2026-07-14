@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 
+const API_URL = "https://wice-portal-backend-hweq.onrender.com";
+
+
 function Admin({ logout }) {
 
 
@@ -30,39 +33,44 @@ function Admin({ logout }) {
 
 
 
-
+  // LOAD DATA
 
   function loadData(){
 
 
-   axios.get
-   "https://wice-portal-backend-hweq.onrender.com/pending-expenses"
-    
+    axios
+    .get(`${API_URL}/pending-expenses`)
     .then(res=>{
       setPending(res.data);
+    })
+    .catch(err=>{
+      console.log(err);
     });
 
 
 
-    axios.get(
-      "http://wice-portal-backend-hweq.onrender.com/approved-expenses"
-    )
+    axios
+    .get(`${API_URL}/approved-expenses`)
     .then(res=>{
       setApproved(res.data);
+    })
+    .catch(err=>{
+      console.log(err);
     });
 
 
 
-    axios.get(
-      "http://wice-portal-backend-hweq.onrender.com/rejected-expenses"
-    )
+    axios
+    .get(`${API_URL}/rejected-expenses`)
     .then(res=>{
       setRejected(res.data);
+    })
+    .catch(err=>{
+      console.log(err);
     });
 
 
   }
-
 
 
 
@@ -78,17 +86,17 @@ function Admin({ logout }) {
 
 
 
+  // ADD REQUIREMENT
 
   function addExpense(){
 
 
-    axios.post(
-
-      "http://127.0.0.1:8000/expenses",
-
+    axios
+    .post(
+      `${API_URL}/expenses`,
       form
-
     )
+
     .then(()=>{
 
 
@@ -108,6 +116,10 @@ function Admin({ logout }) {
       loadData();
 
 
+    })
+
+    .catch(err=>{
+      console.log(err);
     });
 
 
@@ -117,19 +129,25 @@ function Admin({ logout }) {
 
 
 
+
+  // APPROVE
 
   function approve(id){
 
 
-    axios.put(
-
-      `http://127.0.0.1:8000/approve/${id}`
-
+    axios
+    .put(
+      `${API_URL}/approve/${id}`
     )
+
     .then(()=>{
 
       loadData();
 
+    })
+
+    .catch(err=>{
+      console.log(err);
     });
 
 
@@ -139,19 +157,24 @@ function Admin({ logout }) {
 
 
 
+  // REJECT
 
   function reject(id){
 
 
-    axios.put(
-
-      `http://127.0.0.1:8000/reject/${id}`
-
+    axios
+    .put(
+      `${API_URL}/reject/${id}`
     )
+
     .then(()=>{
 
       loadData();
 
+    })
+
+    .catch(err=>{
+      console.log(err);
     });
 
 
@@ -163,6 +186,7 @@ function Admin({ logout }) {
 
 
   const allExpenses=[
+
 
     ...pending.map(item=>({
 
@@ -192,6 +216,7 @@ function Admin({ logout }) {
 
     }))
 
+
   ];
 
 
@@ -203,10 +228,15 @@ function Admin({ logout }) {
 
 
     const searchMatch =
+
     item.name
+
     .toLowerCase()
+
     .includes(
+
       search.toLowerCase()
+
     );
 
 
@@ -236,7 +266,6 @@ function Admin({ logout }) {
 
 
 
-
 return (
 
 
@@ -259,7 +288,6 @@ fontFamily:"Arial"
 
 
 
-
 <div
 
 style={{
@@ -278,12 +306,16 @@ padding:"30px"
 
 
 <h2>
+
 WICE Portal
+
 </h2>
 
 
 <p>
+
 Admin Panel
+
 </p>
 
 
@@ -348,9 +380,6 @@ Logout
 
 
 
-
-
-
 <div
 
 style={{
@@ -400,7 +429,9 @@ WICE Sponsorship Dashboard
 
 
 <p>
+
 Admin Management System
+
 </p>
 
 
@@ -437,11 +468,174 @@ cursor:"pointer"
 
 
 
+</div>2/2
+{/* ADD FORM */}
+
+{
+
+showForm &&
+
+
+<div
+
+style={cardStyle}
+
+>
+
+
+<h2>
+Add New Requirement
+</h2>
+
+
+
+<input
+
+placeholder="Requirement Name"
+
+value={form.name}
+
+onChange={(e)=>
+
+setForm({
+
+...form,
+
+name:e.target.value
+
+})
+
+}
+
+style={inputStyle}
+
+/>
+
+
+
+
+
+<input
+
+placeholder="Description"
+
+value={form.description}
+
+onChange={(e)=>
+
+setForm({
+
+...form,
+
+description:e.target.value
+
+})
+
+}
+
+style={inputStyle}
+
+/>
+
+
+
+
+
+<input
+
+placeholder="Amount"
+
+type="number"
+
+value={form.amount}
+
+onChange={(e)=>
+
+setForm({
+
+...form,
+
+amount:e.target.value
+
+})
+
+}
+
+style={inputStyle}
+
+/>
+
+
+
+
+
+<input
+
+placeholder="Required Date"
+
+value={form.required_date}
+
+onChange={(e)=>
+
+setForm({
+
+...form,
+
+required_date:e.target.value
+
+})
+
+}
+
+style={inputStyle}
+
+/>
+
+
+
+
+
+<button
+
+onClick={addExpense}
+
+style={buttonStyle}
+
+>
+
+Submit Requirement
+
+</button>
+
+
+
+
+<button
+
+onClick={()=>setShowForm(false)}
+
+style={cancelStyle}
+
+>
+
+Cancel
+
+</button>
+
+
 </div>
 
 
+}
 
 
+
+
+
+
+
+
+{/* SEARCH */}
 
 
 <div
@@ -469,21 +663,9 @@ value={search}
 
 onChange={(e)=>setSearch(e.target.value)}
 
-style={{
-
-padding:"12px",
-
-width:"60%",
-
-border:"1px solid #ccc",
-
-borderRadius:"8px"
-
-}}
+style={inputStyle}
 
 />
-
-
 
 
 
@@ -493,187 +675,26 @@ value={filter}
 
 onChange={(e)=>setFilter(e.target.value)}
 
-style={{
-
-padding:"12px",
-
-marginLeft:"20px",
-
-borderRadius:"8px"
-
-}}
+style={inputStyle}
 
 >
 
 
-<option>
-All
-</option>
+<option>All</option>
 
+<option>Pending</option>
 
-<option>
-Pending
-</option>
+<option>Approved</option>
 
-
-<option>
-Approved
-</option>
-
-
-<option>
-Rejected
-</option>
+<option>Rejected</option>
 
 
 </select>
 
 
-
-</div>
-     
-
-
-{/* ADD FORM */}
-
-{
-
-showForm &&
-
-
-<div
-
-style={cardStyle}
-
->
-
-
-<h2>
-Add New Requirement
-</h2>
-
-
-
-<input
-
-placeholder="Requirement Name"
-
-value={form.name}
-
-onChange={(e)=>setForm({
-
-...form,
-
-name:e.target.value
-
-})}
-
-style={inputStyle}
-
-/>
-
-
-
-
-<input
-
-placeholder="Description"
-
-value={form.description}
-
-onChange={(e)=>setForm({
-
-...form,
-
-description:e.target.value
-
-})}
-
-style={inputStyle}
-
-/>
-
-
-
-
-
-<input
-
-placeholder="Amount"
-
-type="number"
-
-value={form.amount}
-
-onChange={(e)=>setForm({
-
-...form,
-
-amount:e.target.value
-
-})}
-
-style={inputStyle}
-
-/>
-
-
-
-
-
-<input
-
-placeholder="Required Date"
-
-value={form.required_date}
-
-onChange={(e)=>setForm({
-
-...form,
-
-required_date:e.target.value
-
-})}
-
-style={inputStyle}
-
-/>
-
-
-
-
-<button
-
-onClick={addExpense}
-
-style={buttonStyle}
-
->
-
-Submit Requirement
-
-</button>
-
-
-
-<button
-
-onClick={()=>setShowForm(false)}
-
-style={cancelStyle}
-
->
-
-Cancel
-
-</button>
-
-
-
 </div>
 
 
-}
 
 
 
@@ -681,8 +702,7 @@ Cancel
 
 
 
-{/* SUMMARY CARDS */}
-
+{/* SUMMARY */}
 
 
 <div
@@ -750,15 +770,14 @@ value={rejected.length}
 
 
 
-{/* TABLE */}
-
-
 
 <h2>
 
 Requirements
 
 </h2>
+
+
 
 
 
@@ -780,7 +799,6 @@ marginTop:"20px"
 
 
 <thead>
-
 
 <tr
 
@@ -826,7 +844,6 @@ Action
 
 
 </tr>
-
 
 </thead>
 
@@ -935,7 +952,6 @@ item.currentStatus==="Rejected"
 
 
 
-
 <td style={tdStyle}>
 
 
@@ -1019,8 +1035,8 @@ Reject
 }
 
 
-</tbody>
 
+</tbody>
 
 
 </table>
@@ -1031,8 +1047,6 @@ Reject
 
 
 
-
-{/* APPROVED */}
 
 
 
@@ -1058,21 +1072,17 @@ style={cardStyle}
 
 🟢 <b>{item.name}</b>
 
-
 <br/>
 
 Amount: ৳{item.amount}
-
 
 <br/>
 
 Approved By: {item.approved_by || "Admin"}
 
-
 <br/>
 
 Approved Date: {item.approved_date || "N/A"}
-
 
 
 </div>
@@ -1089,8 +1099,6 @@ Approved Date: {item.approved_date || "N/A"}
 
 
 
-
-{/* REJECTED */}
 
 
 
@@ -1117,11 +1125,9 @@ style={cardStyle}
 
 🔴 <b>{item.name}</b>
 
-
 <br/>
 
 Amount: ৳{item.amount}
-
 
 
 </div>
@@ -1135,8 +1141,8 @@ Amount: ৳{item.amount}
 
 
 
-</div>
 
+</div>
 
 
 </div>
@@ -1160,6 +1166,7 @@ function Card({title,value}){
 
 return(
 
+
 <div
 
 style={{
@@ -1180,7 +1187,9 @@ boxShadow:"0 5px 15px rgba(0,0,0,0.08)"
 
 
 <h3>
+
 {title}
+
 </h3>
 
 
@@ -1213,6 +1222,8 @@ color:"#004aad"
 
 
 
+
+
 const cardStyle={
 
 background:"white",
@@ -1226,6 +1237,7 @@ borderRadius:"15px",
 boxShadow:"0 5px 15px rgba(0,0,0,0.08)"
 
 };
+
 
 
 
@@ -1249,6 +1261,7 @@ borderRadius:"8px"
 
 
 
+
 const buttonStyle={
 
 background:"#004aad",
@@ -1264,6 +1277,7 @@ borderRadius:"10px",
 cursor:"pointer"
 
 };
+
 
 
 
@@ -1289,11 +1303,15 @@ cursor:"pointer"
 
 
 
+
 const thStyle={
 
-padding:"15px"
+padding:"15px",
+
+border:"1px solid #ddd"
 
 };
+
 
 
 
@@ -1302,9 +1320,12 @@ const tdStyle={
 
 padding:"15px",
 
-textAlign:"center"
+textAlign:"center",
+
+border:"1px solid #ddd"
 
 };
+
 
 
 
