@@ -35,9 +35,9 @@ function Admin({ logout }) {
   function loadData(){
 
 
-    axios.get(
-      "http://127.0.0.1:8000/pending-expenses"
-    )
+   axios.get
+   "https://wice-portal-backend-hweq.onrender.com/pending-expenses"
+    
     .then(res=>{
       setPending(res.data);
     });
@@ -45,7 +45,7 @@ function Admin({ logout }) {
 
 
     axios.get(
-      "http://127.0.0.1:8000/approved-expenses"
+      "http://wice-portal-backend-hweq.onrender.com/approved-expenses"
     )
     .then(res=>{
       setApproved(res.data);
@@ -54,7 +54,7 @@ function Admin({ logout }) {
 
 
     axios.get(
-      "http://127.0.0.1:8000/rejected-expenses"
+      "http://wice-portal-backend-hweq.onrender.com/rejected-expenses"
     )
     .then(res=>{
       setRejected(res.data);

@@ -18,7 +18,7 @@ function loadData(){
 
 
 axios.get(
-"http://127.0.0.1:8000/expenses"
+https://wice-portal-backend-hweq.onrender.com
 )
 
 .then(res=>{
